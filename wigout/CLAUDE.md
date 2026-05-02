@@ -25,6 +25,8 @@ All three share the same Firebase backend and Cloud Functions for AI generation.
 
 ## Current Status
 
+**Health:** 🟡 IN PROGRESS
+
 ### iOS — pre-submission, metadata pending
 - ✅ Build successful, runs on device
 - ✅ StoreKit 2 fully implemented with server-side verification via Firebase Cloud Function

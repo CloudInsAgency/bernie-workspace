@@ -10,6 +10,8 @@ and Calendly bookings. Phone-only NAP — no physical address listed.
 
 ## Current Status
 
+**Health:** 🟢 LIVE
+
 **LIVE** at https://chrisburnsrealtornj.com (GitHub Pages + Namecheap DNS)
 
 **Working:**

@@ -18,6 +18,8 @@ creator briefs, and ROI tracking. No code, no repo. Strategy and content only.
 
 ## Current Status
 
+**Health:** 🟡 IN PROGRESS
+
 **The app is live.** $6.99 on the App Store, listing active.
 
 **Marketing work — assets created but not yet deployed:**

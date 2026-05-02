@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bernie · Workspace Dashboard</title>
+<style>
+  :root {
+    --bg: #fafaf9;
+    --surface: #ffffff;
+    --border: #e7e5e4;
+    --border-strong: #d6d3d1;
+    --text: #1c1917;
+    --text-muted: #57534e;
+    --text-subtle: #78716c;
+    --accent: #4353ff;
+    --green: #16a34a;
+    --green-soft: #dcfce7;
+    --yellow: #ca8a04;
+    --yellow-soft: #fef9c3;
+    --red: #dc2626;
+    --red-soft: #fee2e2;
+    --unknown: #78716c;
+    --unknown-soft: #f5f5f4;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; color: var(--text); background: var(--bg); }
+  body { max-width: 1400px; margin: 0 auto; padding: 48px 32px 96px; }
+  header.page { margin-bottom: 40px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+  .page__title { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .page__subtitle { font-size: 15px; color: var(--text-muted); }
+  .page__meta { font-size: 12px; color: var(--text-subtle); margin-top: 12px; font-variant-numeric: tabular-nums; }
+
+  .summary { display: flex; gap: 24px; margin: 24px 0 40px; flex-wrap: wrap; }
+  .summary__item { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+  .summary__count { font-size: 18px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+  .summary__dot { width: 10px; height: 10px; border-radius: 50%; }
+  .summary__dot--green { background: var(--green); }
+  .summary__dot--yellow { background: var(--yellow); }
+  .summary__dot--red { background: var(--red); }
+  .summary__dot--unknown { background: var(--unknown); }
+
+  .skills { margin-bottom: 48px; }
+  .skills__title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-subtle); margin-bottom: 12px; }
+  .skills__grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .skill-badge { font-size: 13px; font-family: 'SF Mono', Menlo, Consolas, monospace; padding: 4px 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text-muted); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 20px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 16px; transition: border-color 0.15s, transform 0.15s; }
+  .card:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+  .card--green { border-top: 3px solid var(--green); }
+  .card--yellow { border-top: 3px solid var(--yellow); }
+  .card--red { border-top: 3px solid var(--red); }
+  .card--unknown { border-top: 3px solid var(--unknown); opacity: 0.85; }
+
+  .card__header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .card__title { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+  .card__agent { display: block; margin-top: 2px; font-size: 12px; font-family: 'SF Mono', Menlo, Consolas, monospace; color: var(--text-subtle); }
+
+  .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; }
+  .badge--green { background: var(--green-soft); color: var(--green); }
+  .badge--yellow { background: var(--yellow-soft); color: var(--yellow); }
+  .badge--red { background: var(--red-soft); color: var(--red); }
+  .badge--unknown { background: var(--unknown-soft); color: var(--unknown); }
+
+  .card__status { font-size: 14px; line-height: 1.5; color: var(--text-muted); }
+
+  .card__section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-subtle); margin-bottom: 8px; }
+  .issues { list-style: none; counter-reset: i; }
+  .issues li { position: relative; padding: 6px 0 6px 24px; font-size: 13px; line-height: 1.45; color: var(--text); border-bottom: 1px solid var(--border); }
+  .issues li:last-child { border-bottom: none; }
+  .issues li::before { counter-increment: i; content: counter(i); position: absolute; left: 0; top: 6px; width: 18px; height: 18px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; font-size: 10px; font-weight: 600; color: var(--text-subtle); display: flex; align-items: center; justify-content: center; font-variant-numeric: tabular-nums; }
+  .issues__empty { color: var(--text-subtle); font-style: italic; padding: 4px 0 !important; }
+  .issues__empty::before { display: none !important; }
+
+  .card__footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+  .card__url { font-size: 12px; font-family: 'SF Mono', Menlo, Consolas, monospace; color: var(--accent); text-decoration: none; }
+  .card__url:hover { text-decoration: underline; }
+  .card__url--none { color: var(--text-subtle); font-style: italic; }
+  .card__recent { font-size: 11px; color: var(--text-subtle); font-variant-numeric: tabular-nums; }
+  .card__recent--none { font-style: italic; }
+
+  footer.page-footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center; font-size: 12px; color: var(--text-subtle); }
+
+  @media (max-width: 768px) {
+    body { padding: 24px 16px 64px; }
+    .grid { grid-template-columns: 1fr; }
+    .page__title { font-size: 24px; }
+  }
+  @media print {
+    body { padding: 16px; max-width: none; }
+    .card { break-inside: avoid; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+  <header class="page">
+    <h1 class="page__title">Bernie</h1>
+    <p class="page__subtitle">Cloud Design Studio · 8-project orchestrator workspace</p>
+    <p class="page__meta">Generated Sat, May 2, 2026, 10:59 AM · commit 3aef7c2</p>
+  </header>
+
+  <section class="summary">
+    <div class="summary__item"><span class="summary__dot summary__dot--green"></span><span class="summary__count">3</span> live</div>
+    <div class="summary__item"><span class="summary__dot summary__dot--yellow"></span><span class="summary__count">4</span> in progress</div>
+    <div class="summary__item"><span class="summary__dot summary__dot--red"></span><span class="summary__count">1</span> blocked</div>
+    
+  </section>
+
+  <section class="skills">
+    <h2 class="skills__title">Available skills (8)</h2>
+    <div class="skills__grid"><span class="skill-badge">amazon-affiliate</span><span class="skill-badge">context-update</span><span class="skill-badge">firebase-ops</span><span class="skill-badge">marketing-creative</span><span class="skill-badge">midjourney-ad-creative</span><span class="skill-badge">seo-audit</span><span class="skill-badge">storekit-android-billing</span><span class="skill-badge">vercel-deploy</span></div>
+  </section>
+
+  <section class="grid">
+    
+    <article class="card card--green">
+      <header class="card__header">
+        <div>
+          <h2 class="card__title">Cloud Deals</h2>
+          <span class="card__agent">cloud-deals-agent · 4 context files</span>
+        </div>
+        <span class="badge badge--green">LIVE</span>
+      </header>
+      <p class="card__status">No status section found.</p>
+      <div class="card__section">
+        <h3 class="card__section-title">Top open issues</h3>
+        <ol class="issues"><li>Compare pages are orphans — paste prepared Claude Code prompt to add /compare to navbar, add a comparison section on the homepage, and cr...</li><li>Apple Developer enrollment stuck — 27+ days pending. Contact Apple Developer Support at https://developer.apple.com/contact/ citing Enrol...</li><li>Meta Pixel install — get Pixel ID from business.facebook.com/eventsmanager, then run prepared install prompt. Required before any meaning...</li></ol>
+      </div>
+      <footer class="card__footer">
+        <a class="card__url" href="https://developer.apple.com/contact/" target="_blank" rel="noopener">developer.apple.com/contact/ ↗</a>
+        <time class="card__recent">Updated 2026-04-26 — Migrated four Claude.ai projects into this consolidated workspace</time>
+      </footer>
+    </article>
+
+    <article class="card card--yellow">
+      <header class="card__header">
+        <div>
+          <h2 class="card__title">Cloud Insurance</h2>
+          <span class="card__agent">cloud-insurance-agent · 1 context file</span>
+        </div>
+        <span class="badge badge--yellow">IN PROGRESS</span>
+      </header>
+      <p class="card__status">26 of 30 pages complete (87%) — site largely built, deployment + Formspree wiring still pending.</p>
+      <div class="card__section">
+        <h3 class="card__section-title">Top open issues</h3>
+        <ol class="issues"><li>Formspree not activated — YOURFORMID placeholder still in index.html. Needs account creation, form generation, ID swap, and email verific...</li><li>No GitHub repo / no Pages deployment — site exists only as files in /mnt/user-data/outputs/. Needs to be pushed to a real repo and Pages ...</li><li>4 Earthquake pages still missing — blocks the &quot;30 pages&quot; milestone and the sitemap</li></ol>
+      </div>
+      <footer class="card__footer">
+        <span class="card__url card__url--none">Not deployed</span>
+        <time class="card__recent">Updated 2026-04-26 — Migrated Cloud Insurance Site project from Claude.ai into Bernie workspace</time>
+      </footer>
+    </article>
+
+    <article class="card card--green">
+      <header class="card__header">
+        <div>
+          <h2 class="card__title">Chris Burns Realtor</h2>
+          <span class="card__agent">chris-burns-agent · 2 context files</span>
+        </div>
+        <span class="badge badge--green">LIVE</span>
+      </header>
+      <p class="card__status">LIVE at https://chrisburnsrealtornj.com (GitHub Pages + Namecheap DNS)</p>
+      <div class="card__section">
+        <h3 class="card__section-title">Top open issues</h3>
+        <ol class="issues"><li>42 pages &quot;Discovered – currently not indexed&quot; in GSC. Root causes identified: (a) backup/duplicate files in repo causing crawl confusion,...</li><li>3 pages flagged with redirects in GSC — likely HTTP→HTTPS or www vs non-www. Specific URLs not yet identified; need to drill into the GSC...</li><li>1 page returning 404 — specific URL not identified. Cross-check sitemap.xml against actual filenames in the repo</li></ol>
+      </div>
+      <footer class="card__footer">
+        <a class="card__url" href="https://chrisburnsrealtornj.com" target="_blank" rel="noopener">chrisburnsrealtornj.com ↗</a>
+        <time class="card__recent">Updated 2026-04-26 — Migrated Chris Burns Site project from Claude.ai into Bernie workspace</time>
+      </footer>
+    </article>
+
+    <article class="card card--yellow">
+      <header class="card__header">
+        <div>
+          <h2 class="card__title">Cloud Design Studio</h2>
+          <span class="card__agent">cds-agent · 1 context file</span>
+        </div>
+        <span class="badge badge--yellow">IN PROGRESS</span>
+      </header>
+      <p class="card__status">Live at https://[username].github.io/clouddesignstudio/ (GitHub Pages).</p>
+      <div class="card__section">
+        <h3 class="card__section-title">Top open issues</h3>
+        <ol class="issues"><li>Build failing on GitHub Pages. Jekyll error triggered by the assets/ folder. Fix is trivial: add an empty .nojekyll file to repo root, co...</li><li>Filename typo: MobileAppDevelopement.webp. &quot;Developement&quot; is misspelled. Works fine because the HTML matches, but worth correcting both f...</li><li>Empty assets/ folder — unused, was the root cause of the Jekyll issue. Can be deleted after .nojekyll ships</li></ol>
+      </div>
+      <footer class="card__footer">
+        <span class="card__url card__url--none">Not deployed</span>
+        <time class="card__recent">Updated 2026-04-26 — Migrated Cloud Design Studio Site project from Claude.ai into Bernie workspace</time>
+      </footer>
+    </article>
+
+    <article class="card card--yellow">
+      <header class="card__header">
+        <div>
+          <h2 class="card__title">Zero Sugar Club</h2>
+          <span class="card__agent">zero-sugar-agent · 1 context file</span>
+        </div>
+        <span class="badge badge--yellow">IN PROGRESS</span>
+      </header>
+      <p class="card__status">The app is live. $6.99 on the App Store, listing active.</p>
+      <div class="card__section">
+        <h3 class="card__section-title">Top open issues</h3>
+        <ol class="issues"><li>No platform chosen for the SEO article — without publishing, the article does nothing. Recommended: Medium for reach + SEO, or integrate ...</li><li>Collabstr account not created — required before posting any campaign listing or reviewing applicants. ~30 minutes of setup work</li><li>No tracking infrastructure — without Bitly links or landing pages, you can&#39;t attribute downloads to creators. Need this before any campai...</li></ol>
+      </div>
+      <footer class="card__footer">
+        <span class="card__url card__url--none">Not deployed</span>
+        <time class="card__recent">Updated 2026-04-26 — Migrated Zero Sugar Club 2 project from Claude.ai into Bernie workspace</time>
+      </footer>
+    </article>
+
+    <article class="card card--green">
+      <header class="card__header">
+        <div>
+          <h2 class="card__title">PollPulse</h2>
+          <span class="card__agent">poll-pulse-agent · 2 context files</span>
+        </div>
+        <span class="badge badge--green">LIVE</span>
+      </header>
+      <p class="card__status">🟢 LIVE in App Store — v1.0.4, approved and downloadable.</p>
+      <div class="card__section">
+        <h3 class="card__section-title">Top open issues</h3>
+        <ol class="issues"><li>AdMob low fill rate (10-20%) — banner ads serve only sometimes. Normal for new apps; expected to climb to 30-50% in week 2 and 60-90% by ...</li><li>Reddit spam filter — r/SideProject post removed automatically due to new-account + low-karma. Mods messaged for manual approval, awaiting...</li><li>TikTok bio link blocked — TikTok requires Business Registration (with actual business license docs Craig doesn&#39;t have) for clickable bio ...</li></ol>
+      </div>
+      <footer class="card__footer">
+        <a class="card__url" href="https://apps.apple.com/us/app/pollpulse/id6757474796" target="_blank" rel="noopener">apps.apple.com/us/app/pollpulse/id6757474796 ↗</a>
+        <time class="card__recent">Updated 2026-04-26 — Migrated PollPulse project from Claude.ai into Bernie workspace</time>
+      </footer>
+    </article>
+
+    <article class="card card--yellow">
+      <header class="card__header">
+        <div>
+          <h2 class="card__title">WigOut</h2>
+          <span class="card__agent">wigout-agent · 4 context files</span>
+        </div>
+        <span class="badge badge--yellow">IN PROGRESS</span>
+      </header>
+      <p class="card__status">### iOS — pre-submission, metadata pending - ✅ Build successful, runs on device - ✅ StoreKit 2 fully implemented with server-side verification via Firebase Cloud Function - ✅ Fi...</p>
+      <div class="card__section">
+        <h3 class="card__section-title">Top open issues</h3>
+        <ol class="issues"><li>Subscription metadata incomplete — both subs show &quot;Missing Metadata&quot; in App Store Connect. Need localization (display name + description)...</li><li>Consumable metadata — same requirements (localization + screenshot) for the two top-up products</li><li>App icon sizes — previously had missing icon errors (120×120, 152×152). Verify all required sizes are in Assets.xcassets before submissio...</li></ol>
+      </div>
+      <footer class="card__footer">
+        <a class="card__url" href="https://`https://us-central1-wigoutapp.cloudfunctions.net/handleAppStoreNotification`" target="_blank" rel="noopener">`https://us-central1-wigoutapp.cloudfunctions.net/handleAppStoreNotification` ↗</a>
+        <time class="card__recent">Updated 2026-04-26 — Migrated WigOut project from Claude.ai (4 source snapshots) into Bernie workspace</time>
+      </footer>
+    </article>
+
+    <article class="card card--red">
+      <header class="card__header">
+        <div>
+          <h2 class="card__title">Cloud Dispatch Ops</h2>
+          <span class="card__agent">dispatch-agent · 6 context files</span>
+        </div>
+        <span class="badge badge--red">BLOCKED</span>
+      </header>
+      <p class="card__status">🟢 Production deployed at https://dispatchops-three.vercel.app</p>
+      <div class="card__section">
+        <h3 class="card__section-title">Top open issues</h3>
+        <ol class="issues"><li>Stripe live secret key access blocked — copying from dashboard returns mk1... instead of sklive.... Likely needs &quot;Reveal live key&quot; or acc...</li><li>3 Vercel env vars missing — FIREBASECLIENTEMAIL, FIREBASEPRIVATEKEY, STRIPEWEBHOOKSECRET. Without them, the webhook can&#39;t authenticate wi...</li><li>All VITESTRIPE keys not in Vercel — only in local .env. Production frontend can&#39;t initialize Stripe.js with live keys until these are set...</li></ol>
+      </div>
+      <footer class="card__footer">
+        <a class="card__url" href="https://`https://dispatchops-three.vercel.app/api/webhook`" target="_blank" rel="noopener">`https://dispatchops-three.vercel.app/api/webhook` ↗</a>
+        <time class="card__recent">Updated 2026-04-26 — Migrated Cloud Dispatch Ops project from Claude.ai (6 source snapshots) into Bernie workspace</time>
+      </footer>
+    </article>
+  </section>
+
+  <footer class="page-footer">
+    Auto-generated by <code>generate-dashboard.mjs</code> on bernie-save · iCloud-synced · GitHub-versioned
+  </footer>
+</body>
+</html>

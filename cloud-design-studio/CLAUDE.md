@@ -16,6 +16,8 @@ with no build system.
 
 ## Current Status
 
+**Health:** 🟡 IN PROGRESS
+
 **Live** at `https://[username].github.io/clouddesignstudio/` (GitHub Pages).
 
 Design and content are complete:

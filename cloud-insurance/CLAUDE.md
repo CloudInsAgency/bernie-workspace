@@ -10,6 +10,8 @@ County keywords. Pure static HTML/CSS, deploys to GitHub Pages.
 
 ## Current Status
 
+**Health:** 🟡 IN PROGRESS
+
 **26 of 30 pages complete (87%)** — site largely built, deployment + Formspree wiring still pending.
 
 **Done:**

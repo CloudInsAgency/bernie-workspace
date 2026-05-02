@@ -14,6 +14,8 @@ revenue while the app builds a subscriber base.
 
 ## Current Status (as of April 2026)
 
+**Health:** 🟢 LIVE
+
 ### Website — cloudpricedeals.com (LIVE)
 
 Recently completed a full refresh:

@@ -19,6 +19,8 @@ with auth, multi-tenancy, subscription billing, and role-based access.
 
 ## Current Status
 
+**Health:** 🔴 BLOCKED
+
 **🟢 Production deployed** at https://dispatchops-three.vercel.app
 
 The app is fundamentally working — owners can sign up, run a 14-day trial, manage technicians, dispatch jobs via Kanban, and technicians can use the mobile portal. The platform is **one credentials configuration away from accepting real money.**

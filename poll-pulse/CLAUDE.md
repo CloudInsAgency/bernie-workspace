@@ -11,6 +11,8 @@ Solo project under Cloud Design Studio LLC, monetized via AdMob banner ads.
 
 ## Current Status
 
+**Health:** 🟢 LIVE
+
 **🟢 LIVE in App Store** — v1.0.4, approved and downloadable.
 
 - App Store ID: `id6757474796`
