@@ -12,9 +12,11 @@ revenue while the app builds a subscriber base.
 
 ---
 
-## Current Status (as of May 2026)
+## Current Status
 
 **Health:** 🟢 LIVE
+
+CloudPriceDeals website live at cloudpricedeals.com with new cream + evergreen Mochi-&-Oak-style redesign deployed 2026-05-03 (commit `7adac40`); product pages now Amazon-only with cent-accurate currency formatting. CloudDeals iOS companion app in pre-submission development.
 
 ### Website — cloudpricedeals.com (LIVE)
 
@@ -208,4 +210,5 @@ is the always-loaded summary.
 ---
 
 ## Recent Changes
+- 2026-05-03: Visual redesign deployed to prod (cream + evergreen palette, Mochi-&-Oak hero, TrustSection); product pages restricted to Amazon-only with cent-accurate currency utility; pre-Meta-ad UX/conversion fixes shipped (FTC banner, Product/Breadcrumb JSON-LD, dynamic 44-URL sitemap, browse `?cat=` and `?retailer=` filters)
 - 2026-04-26: Migrated four Claude.ai projects into this consolidated workspace
